@@ -11,8 +11,8 @@ scores = {} #using dictionary for easy insertion in csv
 
 # using loop to add all subjects marks
 for i in range(no_of_sub):
-    subject_name=input(f"Enter Subject{i+1}: ")
-    score_got = int(input(f"Enter the mark you scored in{subject_name}: "))
+    subject_name=input(f"Enter Subject {i+1}: ")
+    score_got = int(input(f"Enter the mark you scored in {subject_name}: "))
     
     #adding values in dictionary
     scores[subject_name]=score_got  
