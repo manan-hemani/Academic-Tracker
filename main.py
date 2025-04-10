@@ -20,8 +20,23 @@ for i in range(no_of_sub):
 attendance=float(input("Enter your Overall Attendance Percentage:"))
 
 #printing the inputted details for confirmation
-#for confirmation show it in the table form
 print(scores)
+#for confirmation show it in the table form
+while True:
+  data = []
+  for subject, score in scores.items():
+      data.append({
+          'Student Name': s_name,
+          'Subject': subject,
+          'Score': score,
+          'Attendance (%)': attendance
+          })
+  df = pd.DataFrame(data)
+  df
+  confrim_msg=input("Click yes to confirm or click No to modify the data:")
+
+  if confrim_msg=="yes":
+    break
 
 
 # max_score = sum(scores) 
