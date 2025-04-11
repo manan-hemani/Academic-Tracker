@@ -1,16 +1,16 @@
-
 import pandas as pd
 
 #starting title of the project
 print("Welcome to academic Tracker and Resource Recommander\n\n")
 print("*"*30)
 
+#loop for inputting the details
 while True:
   print("Please Input the Necessary Details to Track your Progress:\n\n")
 
 #Inputting the details of the user
   s_name=input("Your Name:")
-  no_of_sub=int(input("Enter the No.of.Sunject:"))
+  no_of_sub=int(input("Enter the No.of.Subject:"))
 
   scores = {} #using dictionary for easy insertion in csv  
 
@@ -26,8 +26,6 @@ while True:
 
 #printing the inputted details for confirmation
 #for confirmation show it in the table form
-
-
   data = []
   for subject, score in scores.items():
       data.append({
@@ -37,18 +35,18 @@ while True:
           'Attendance (%)': attendance
           })
   df = pd.DataFrame(data)
-  print(df)
+  #printing all the details
+  print(df.to_string())
   confrim_msg=input("Click yes to confirm or click No to modify the data:")
 
   if confrim_msg=="yes":
      print("Data confirmed and saved")
      break
   else:
-    print("Re-enter the data.")
-  
+    print("Re-enter the data.") #user will re enter the details
+#after storing data we will calculate the progress
+print("\n")
+print("*"*30)
+print("Calculating your Progress....")   
 
-
-
-
-# max_score = sum(scores) 
-# print("Total Marks:", max_score)
+#will display the progress
