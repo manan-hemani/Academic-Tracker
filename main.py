@@ -51,6 +51,7 @@ else:
             'Attendance (%)': attendance
             })
     df = pd.DataFrame(data)
+    df.to_csv('details.csv',index=False)#detail.csv is a csv file where data is stored in csv format.
     
     #printing all the details
     print()
