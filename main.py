@@ -52,8 +52,10 @@ else:
             })
     df = pd.DataFrame(data)
     df.to_csv('details.csv',index=False)#detail.csv is a csv file where data is stored in csv format.
+
+    #its just to check the data have been stored in csv format or not.
     df_check=pd.read_csv('details.csv')
-    print(df_check)#its just to check the data have been stored in csv format or not.
+    print(df_check)
     
     #printing all the details
     print()
