@@ -1,0 +1,13 @@
+Subject	Condition	Recommendation
+math	score<33 & attendance<75	
+math	score>33 & attendance<75	
+math	score<33 & attendance>75	
+math	score>33 & attendance>75	
+english	score<33 & attendance<75	
+english	score>33 & attendance<75	
+english	score<33 & attendance>75	
+english	score>33 & attendance>75	
+math	score<33 & attendance<75	
+math	score>33 & attendance<75	
+math	score<33 & attendance>75	
+math	score>33 & attendance>75	
