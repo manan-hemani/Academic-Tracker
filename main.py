@@ -5,7 +5,7 @@ import os
 
 #starting title of the project
 print("Welcome to academic Tracker and Resource Recommander")
-print("*"*30)
+print("*"*50)
 print("\n\n")
 
 #csv file variable
@@ -37,7 +37,7 @@ while True:
     
   # using loop to add all subjects marks
     for i in range(no_of_sub):
-      subject_name=input(f"Enter Subject {i+1}: ").strip().lower()
+      subject_name=input(f"Enter Subject {i+1}: ").strip().title()
       score_got = int(input(f"Enter the marks you scored in {subject_name}: "))
       score_total=int(input(f"Enter the total marks in {subject_name}: "))
       
@@ -66,45 +66,36 @@ while True:
 #calculating ovaerall percentage using numpy
 all_scores=np.array(list(percentage.values()))
 overall_percentage=round(np.mean(all_scores),2)  
-  
-#checking for the weak subject   
-weak_subject=[] 
-for subject,perc in percentage.items():
-  if perc<33:
-    weak_subject.append(subject) 
 
-#making the list of weak subjects in comma separated fromat  
-if weak_subject:
-    weak_subject_str = ", ".join(weak_subject)
-else:
-    weak_subject_str = "None"
-    
-  
-  
-data={
-  'Student Name':s_name,
-  'Attedance (%)':attendance,
-  **percentage, #unpacking the percentage{} (dictionary)
-  'Overall (%)':overall_percentage,
-  'Weak Subject':weak_subject_str
-}  
+#storing the user entered data in data list    
+data=[]
+for subject,percent in percentage.items():  
+  data.append({
+    'Student Name':s_name,
+    'Subject': subject,
+    'Score (%)': percent,
+    'Attendance (%)': attendance,
+    'Overall (%)': overall_percentage,
+    'Weak Subject': 'Yes' if percent < 33 else 'No'
+  })
     
 #storing the data in csv file  
+df_new = pd.DataFrame(data)
 if os.path.exists(user_csv):
   df = pd.read_csv(user_csv)
-  df = pd.concat([df, pd.DataFrame([data])], ignore_index=True)
+  df_combined = pd.concat([df, df_new], ignore_index=True)
 else:
-  df = pd.DataFrame([data])
+  df_combined=df_new
 
-df.to_csv(user_csv, index=False)     
+df_combined.to_csv(user_csv, index=False)     
       
 #after storing data we will display the progress
-print("*"*30)
+print("*"*50)
 print("Calculating your Progress....")   
 print("Your Updated Academic Report:\n")
 
 #printing the data from the csv file 
-print(pd.DataFrame([data]).to_string(index=False))
+print(df_new.to_string(index=False))
   
 #displaying graph related to the progress   
 pl.figure(figsize=(10, 6))
@@ -113,30 +104,31 @@ pl.xlabel("Subjects")
 pl.ylabel("Score Percentage")
 pl.title(f"{s_name}'s Subject Performance")
 pl.ylim(0, 100)
-pl.axhline(y=33, color='red', linestyle='--', label='Pass Threshold')
+pl.axhline(y=33, color='red', linestyle='--', label='Minimum')
 pl.legend()
 pl.grid(axis='y', linestyle='--', alpha=0.7)
 pl.tight_layout()
 pl.show()
 
+#recommendation
 if os.path.exists(resource_csv):
     resources_df = pd.read_csv(resource_csv)
 
     print("\nPersonalized Recommendations:\n")
-    for subject in percentage:
-        score = percentage[subject]
-        if subject in resources_df['Subject'].values:
-            recs = resources_df[resources_df['Subject'] == subject]
+    for _, row in df_new.iterrows():  #iterating over each subject row
+      subject = row['Subject']
+      score = row['Score (%)']
 
-            for _, row in recs.iterrows():
-                cond = row['Condition'].strip().lower()
-                if score < 33 and attendance < 75 and cond == 'score<40 & attendance<75':
-                    print(f"{subject}: {row['Recommendation']}")
-                elif score < 33 and attendance >= 75 and cond == 'score<40 & attendance>=75':
-                    print(f"{subject}: {row['Recommendation']}")
-                elif score >= 33 and attendance < 75 and cond == 'score>=40 & attendance<75':
-                    print(f"{subject}: {row['Recommendation']}")
-                elif score >= 33 and attendance >= 75 and cond == 'score>=40 & attendance>=75':
-                    print(f"{subject}: {row['Recommendation']}")
-else:
-    print("\nNo resource recommendations found. Make sure resources.csv exists with Subject, Condition, and Recommendation columns.")
+      if subject in resources_df['Subject'].values:
+        recs = resources_df[resources_df['Subject'] == subject]
+
+        for _, res_row in recs.iterrows():
+          cond = res_row['Condition'].strip().lower()
+          if score < 33 and attendance < 75 and cond == 'score<33 & attendance<75':
+            print(f"{subject}: {res_row['Recommendation']}")
+          elif score < 33 and attendance >= 75 and cond == 'score<33 & attendance>=75':
+            print(f"{subject}: {res_row['Recommendation']}")
+          elif score >= 33 and attendance < 75 and cond == 'score>=33 & attendance<75':
+            print(f"{subject}: {res_row['Recommendation']}")
+          elif score >= 33 and attendance >= 75 and cond == 'score>=33 & attendance>=75':
+            print(f"{subject}: {res_row['Recommendation']}")
